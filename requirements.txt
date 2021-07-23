@@ -1,0 +1,11 @@
+# installing the flask micro web framework written in python
+Flask==0.10.0
+
+
+# This is mochi vani from the future
+
+# installing werkzeug
+werkzeug==0.14.1
+
+#installing Gunicorn as application server for both development and production use
+gunicorn==19.4.5
