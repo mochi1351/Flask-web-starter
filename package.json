@@ -1,0 +1,19 @@
+{
+  "name": "flask-web-starter",
+  "version": "1.0.0",
+  "description": "this is flask web starter for building any  website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mochi1351/Flask-web-starter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mochi1351/Flask-web-starter/issues"
+  },
+  "homepage": "https://github.com/mochi1351/Flask-web-starter#readme"
+}
