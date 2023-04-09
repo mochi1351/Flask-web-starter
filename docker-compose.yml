@@ -1,0 +1,63 @@
+version: '3.7'
+
+services:
+  web:
+    # Build the web service from the current directory, using the 'app' target and setting environment variables
+    build:
+      context: "."
+      target: "app"
+      args:
+        - "FLASK_ENV=${FLASK_ENV:-production}"
+        - "NODE_ENV=${NODE_ENV:-production}"
+    # Depend on the postgres service
+    depends_on:
+      - "postgres"
+    # Read environment variables from the .env file
+    env_file:
+      - ".env"
+    # Set the restart policy to unless-stopped (default)
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    # Set the stop grace period to 3 seconds
+    stop_grace_period: "3s"
+    # Enable TTY support
+    tty: true
+    # Mount the public folder in the app directory
+    volumes:
+      - "${DOCKER_WEB_VOLUME:-./public:/app/public}"
+    # Set resource limits for the web service
+    deploy:
+      resources:
+        limits:
+          cpus: "${DOCKER_WEB_CPUS:-0}"
+          memory: "${DOCKER_WEB_MEMORY:-0}"
+    # Configure a healthcheck for the web service
+    healthcheck:
+      test: "${DOCKER_WEB_HEALTHCHECK_TEST:-curl localhost:8000/up}"
+      interval: "60s"
+      timeout: "3s"
+      start_period: "5s"
+      retries: 3
+    # Forward port 8000 from the host to port 8000 in the container
+    ports:
+      - "${DOCKER_WEB_PORT_FORWARD:-127.0.0.1:8000}:8000"
+
+  postgres:
+    # Use the postgres 12.2 image
+    image: "postgres:12.2"
+    # Read environment variables from the .env file
+    env_file:
+      - ".env"
+    # Set the restart policy to unless-stopped (default)
+    restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"
+    # Set the stop grace period to 3 seconds
+    stop_grace_period: "3s"
+    # Mount the postgres volume as a mapping
+    volumes:
+      - type: volume
+        source: postgres
+        target: /var/lib/postgresql/data
+
+volumes:
+  # Define the postgres volume as a named volume with no additional options
+  postgres:
+    name: postgres
